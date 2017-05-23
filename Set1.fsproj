@@ -65,6 +65,7 @@
     <Compile Include="Challenge4.fs" />
     <Compile Include="Challenge5.fs" />
     <Compile Include="Challenge6.fs" />
+    <Compile Include="Challenge7.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

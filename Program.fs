@@ -41,7 +41,7 @@ let main argv =
     printfn "Challenge 6:\n  %s\n" key
 
 
-    let res = Challenge7.run
+    let dec = Challenge7.run
     let first = dec.Split '\n' |> Array.head
     assert (first = "I'm back and I'm ringin' the bell ")
     printfn "Challenge 7:\n  %s\n  ...\n" first

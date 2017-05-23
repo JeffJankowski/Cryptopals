@@ -1,5 +1,5 @@
 ﻿open System
-
+open System.Security.Cryptography
 
 let hexToBytes (hexStr:string) = 
     hexStr
@@ -24,21 +24,15 @@ let xorByteArrays (arr1:byte[]) (arr2:byte[]) =
 let xorBytes (arr:byte[]) (b:byte) = 
     Array.map (fun b1 -> b1 ^^^ b) arr
 
-let bestMatch s = 
-//    s |> Seq.filter (fun c -> "etaoi ".Contains(c.ToString())) |> Seq.length
-    s |> Seq.sumBy (fun c ->
-        let c_i = int c
-        if c_i <= 122 && c_i >= 97 then 5 else 0)
+let score (s:string) = 
+    s |> Seq.filter (fun c -> "etaoi ".Contains(c.ToString().ToLower())) |> Seq.length
 
 let decrypt (encBytes:byte[]) = 
-    List.append [48..57] [65..122]
-//    [0..127]
+    [32..126]
     |> List.map (fun i -> 
         ((char i), xorBytes encBytes (byte i) |> Text.Encoding.ASCII.GetString))
-    |> List.maxBy (fun (_, s) -> bestMatch s)
+    |> List.maxBy (fun (_, s) -> score s)
 
-// loops through ASCII chars and does a XOR on all bytes from hex string
-// check for decryption by simply looking for output with the most spaces
 let decryptHex (encStr:string) =
     decrypt (hexToBytes encStr)
 
@@ -64,7 +58,7 @@ let decryptWithKey (enc:byte[]) (key:string) =
         String.replicate (enc.Length / key.Length + 1) key
         |> strToBytes
         |> Array.take enc.Length
-    xorByteArrays enc repeated |> Text.Encoding.Default.GetString
+    xorByteArrays enc repeated |> Text.Encoding.ASCII.GetString
 
 
 [<EntryPoint>]
@@ -91,7 +85,7 @@ let main argv =
         |> Array.map (fun enc -> 
             let c,d = decryptHex enc
             enc, c, d)
-        |> Array.maxBy (fun (_,_,s) -> bestMatch s)
+        |> Array.maxBy (fun (_,_,s) -> score s)
     printfn "Challenge 4:\n  %c: %s (%s)\n" ch2 dec2 enc2
 
     // challenge 5
@@ -107,9 +101,14 @@ let main argv =
     let keySz = 
         [2..40]
         |> List.minBy (fun i -> 
-            let w1 = hamming (dataBytes |> Array.take i) (dataBytes |> Array.skip i |> Array.take i)
-            let w2 = hamming (dataBytes |> Array.take (i*2)) (dataBytes |> Array.skip (i*2) |> Array.take (i*2)) 
-            (float (w1 + w2)) / (float (i * 2)))
+            let n = 2
+            dataBytes
+            |> Seq.chunkBySize i
+            |> Seq.chunkBySize 2
+            |> Seq.filter (fun chunk -> 
+                chunk.Length > 1 && chunk.[0].Length = i && chunk.[1].Length = i)
+            |> Seq.map (fun chunk -> (hamming chunk.[0] chunk.[1] |> float) / (float i))
+            |> Seq.average)
     let chunks = dataBytes |> Array.chunkBySize keySz
     let key =
         [0..keySz-1]
@@ -120,6 +119,10 @@ let main argv =
             |> fst)
         |> String.Concat
     printfn "Challenge 6:\n  %s\n" key
-    printfn "%s" (decryptWithKey dataBytes key)
+//    printfn "%s" (decryptWithKey dataBytes key)
+
+    // challenge 7
+    let key = "YELLOW SUBMARINE"
+
 
     Console.Read ()

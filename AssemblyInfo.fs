@@ -1,4 +1,4 @@
-﻿namespace Cryptopals.AssemblyInfo
+﻿namespace Set1.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,12 +7,12 @@ open System.Runtime.InteropServices
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[<assembly: AssemblyTitle("Cryptopals")>]
+[<assembly: AssemblyTitle("Set1")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
-[<assembly: AssemblyCompany("EP")>]
-[<assembly: AssemblyProduct("Cryptopals")>]
-[<assembly: AssemblyCopyright("Copyright © EP 2017")>]
+[<assembly: AssemblyCompany("")>]
+[<assembly: AssemblyProduct("Set1")>]
+[<assembly: AssemblyCopyright("")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
 

@@ -31,5 +31,5 @@ let run =
         IO.File.ReadAllLines (data_path)
         |> String.Concat
         |> Convert.FromBase64String
-    Util.decryptAES_ECB encrypted (Util.stringToByteArray key) |> Text.Encoding.ASCII.GetString
+    Util.decryptAES_ECB encrypted (Util.stringToByteArray key) |> Util.byteArrayToString
     

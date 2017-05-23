@@ -46,5 +46,7 @@ let main argv =
     assert (first = "I'm back and I'm ringin' the bell ")
     printfn "Challenge 7:\n  %s\n  ...\n" first
 
+    let dups, line = Challenge8.run
+    printfn "Challenge 8:\n  (%i duplicate 16-byte blocks)\n  %s\n" dups line
 
     Console.Read ()

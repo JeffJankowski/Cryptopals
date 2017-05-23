@@ -75,5 +75,5 @@ let run =
             |> Util.findKey_charXOR
             |> fst)
         |> String.Concat
-    key, (Util.encryptBytes_repeatedXOR dataBytes key |> Text.Encoding.ASCII.GetString)
+    key, (Util.encryptBytes_repeatedXOR dataBytes key |> Util.byteArrayToString)
 

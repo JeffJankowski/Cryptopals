@@ -59,6 +59,7 @@
     <Content Include="challenge4_data.txt" />
     <Content Include="challenge6_data.txt" />
     <Content Include="challenge7_data.txt" />
+    <Content Include="challenge8_data.txt" />
     <Compile Include="Challenge1.fs" />
     <Compile Include="Challenge2.fs" />
     <Compile Include="Challenge3.fs" />
@@ -66,6 +67,7 @@
     <Compile Include="Challenge5.fs" />
     <Compile Include="Challenge6.fs" />
     <Compile Include="Challenge7.fs" />
+    <Compile Include="Challenge8.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

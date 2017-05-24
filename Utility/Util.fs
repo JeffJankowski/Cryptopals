@@ -64,15 +64,41 @@ let findKeyFromHex_charXOR (encStr:string) =
     findKey_charXOR (hexToByteArray encStr)
 
 
-let decryptAES_ECB (data:byte[]) (key:byte[]) = 
+let cryptAES_ECB (data:byte[]) (key:byte[]) (en:bool) = 
     use crypto = new RijndaelManaged()
     crypto.KeySize <- key.Length * 8
     crypto.Key <- key
     crypto.Mode <- CipherMode.ECB;
     crypto.Padding <- PaddingMode.None
-    let xform = crypto.CreateDecryptor()
+    let xform = if en then crypto.CreateEncryptor() else crypto.CreateDecryptor()
     xform.TransformFinalBlock(data, 0, data.Length)
 
+let decryptAES_ECB (data:byte[]) (key:byte[]) = 
+    cryptAES_ECB data key false
+
+let encryptAES_ECB (data:byte[]) (key:byte[]) = 
+    cryptAES_ECB data key true
 
 let padByteArray (data:byte[]) (n:int) = 
     Array.append data (Array.create (n - data.Length) 4uy)
+
+
+let encryptAES_CBC (data:byte[]) (key:byte[]) (IV:byte[]) =
+    data
+    |> Array.chunkBySize key.Length
+    |> Array.mapFold(fun prev chunk -> 
+        let xor = xorByteArrays prev chunk
+        let enc = encryptAES_ECB xor key
+        enc, enc ) IV
+    |> fst
+    |> Array.concat
+
+let decryptAES_CBC (data:byte[]) (key:byte[]) (IV:byte[]) =
+    data
+    |> Array.chunkBySize key.Length
+    |> Array.mapFold(fun prev chunk -> 
+        let dec = decryptAES_ECB chunk key
+        let xor = xorByteArrays dec prev
+        xor, chunk ) IV
+    |> fst
+    |> Array.concat
